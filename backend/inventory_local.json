@@ -1,0 +1,66 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Electronics",
+      "description": "Electronic devices and components",
+      "created_at": "2025-10-08T18:15:52.361507",
+      "updated_at": "2025-10-08T18:15:52.361520"
+    },
+    {
+      "id": 2,
+      "name": "Office Supplies",
+      "description": "Office and stationery items",
+      "created_at": "2025-10-08T18:15:52.361522",
+      "updated_at": "2025-10-08T18:15:52.361524"
+    },
+    {
+      "id": 3,
+      "name": "Furniture",
+      "description": "Office and home furniture",
+      "created_at": "2025-10-08T18:15:52.361525",
+      "updated_at": "2025-10-08T18:15:52.361527"
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "name": "Laptop Dell XPS 13",
+      "description": "High-performance ultrabook",
+      "category_id": 1,
+      "purchase_price": 800.0,
+      "selling_price": 1200.0,
+      "quantity": 10,
+      "min_stock_level": 2,
+      "sku": "DELL-XPS13-001",
+      "created_at": "2025-10-08T18:15:52.361528",
+      "updated_at": "2025-10-08T18:15:52.361529"
+    },
+    {
+      "id": 2,
+      "name": "Wireless Mouse",
+      "description": "Bluetooth wireless mouse",
+      "category_id": 1,
+      "purchase_price": 15.0,
+      "selling_price": 25.0,
+      "quantity": 50,
+      "min_stock_level": 10,
+      "sku": "MOUSE-BT-001",
+      "created_at": "2025-10-08T18:15:52.361537",
+      "updated_at": "2025-10-08T18:15:52.361538"
+    },
+    {
+      "id": 3,
+      "name": "Office Chair",
+      "description": "Ergonomic office chair",
+      "category_id": 3,
+      "purchase_price": 150.0,
+      "selling_price": 250.0,
+      "quantity": 1,
+      "min_stock_level": 2,
+      "sku": "CHAIR-ERG-001",
+      "created_at": "2025-10-08T18:15:52.361540",
+      "updated_at": "2025-10-08T18:15:52.361541"
+    }
+  ]
+}

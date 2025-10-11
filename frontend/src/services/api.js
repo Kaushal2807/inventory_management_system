@@ -1,0 +1,64 @@
+import axios from 'axios';
+
+// For production (when served via Nginx), use relative URL
+// For development, use localhost
+const isDevelopment = import.meta.env.DEV;
+const API_BASE_URL = isDevelopment 
+    ? (import.meta.env.VITE_API_URL || 'http://localhost:8000')
+    : '/api';
+
+const api = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+// Items API
+export const itemsAPI = {
+    getAll: () => api.get('/items/'),
+    getById: (id) => api.get(`/items/${id}`),
+    create: (data) => api.post('/items/add', data),
+    update: (id, data) => api.put(`/items/${id}`, data),
+    delete: (id) => api.delete(`/items/${id}`),
+};
+
+// Categories API
+export const categoriesAPI = {
+    getAll: () => api.get('/categories/'),
+    getById: (id) => api.get(`/categories/${id}`),
+    create: (data) => api.post('/categories/add', data),
+    update: (id, data) => api.put(`/categories/${id}`, data),
+    delete: (id) => api.delete(`/categories/${id}`),
+};
+
+// Dashboard API
+export const dashboardAPI = {
+    getStats: () => api.get('/dashboard/stats'),
+};
+
+// Stock Movements API
+export const stockMovementsAPI = {
+    getAll: (params = {}) => api.get('/stock-movements/', { params }),
+    getById: (id) => api.get(`/stock-movements/${id}`),
+    create: (data) => api.post('/stock-movements/', data),
+    delete: (id) => api.delete(`/stock-movements/${id}`),
+    getSummary: () => api.get('/stock-summary/'),
+    getByItemId: (itemId, params = {}) => api.get(`/items/${itemId}/stock-movements/`, { params }),
+};
+
+// Payments API
+export const paymentsAPI = {
+    getAll: () => api.get('/payments/'),
+    getById: (id) => api.get(`/payments/${id}`),
+    create: (data) => api.post('/payments/', data),
+    update: (id, data) => api.put(`/payments/${id}`, data),
+    delete: (id) => api.delete(`/payments/${id}`),
+};
+
+// Authentication API
+export const authAPI = {
+    login: (credentials) => api.post('/auth/login', credentials),
+};
+
+export default api;
