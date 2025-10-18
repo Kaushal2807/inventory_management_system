@@ -11,6 +11,34 @@ from models import Category, Item, StockMovement, Payment, PaymentItem, User
 # Create database tables
 init_database()
 
+# Initialize default users for production
+def init_default_users():
+    """Create default users if they don't exist"""
+    from database import SessionLocal
+    from crud.auth import create_user, get_user_by_username
+    
+    db = SessionLocal()
+    try:
+        # Create default users if they don't exist
+        default_users = [
+            {"username": "admin", "password": "admin123"},
+            {"username": "test", "password": "test123"},
+            {"username": "user", "password": "user123"},
+            {"username": "demo", "password": "demo123"}
+        ]
+        
+        for user_data in default_users:
+            if not get_user_by_username(db, user_data["username"]):
+                create_user(db, user_data["username"], user_data["password"])
+                print(f"✅ Created user: {user_data['username']}")
+    except Exception as e:
+        print(f"❌ Error creating users: {e}")
+    finally:
+        db.close()
+
+# Initialize users on startup
+init_default_users()
+
 # Create FastAPI app
 app = FastAPI(
     title="Inventory Management System API",
