@@ -3,13 +3,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 # Database URL - handles both local and production environments
-# Use file-based SQLite for local development
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./inventory.db")
 
-# For Railway.app deployment, use persistent storage
-if os.getenv("RAILWAY_ENVIRONMENT"):
-    # Production environment - Railway has proper SQLite support
+# For Docker/Production deployment, use persistent storage
+if os.getenv("RAILWAY_ENVIRONMENT") or os.getenv("DOCKER_ENVIRONMENT"):
+    # Production environment - Use persistent data directory
     os.makedirs("/app/data", exist_ok=True)
+    DATABASE_URL = "sqlite:///./data/inventory.db"
+elif "/app" in os.getcwd():
+    # Running in Docker container
+    os.makedirs("/app/data", exist_ok=True) 
     DATABASE_URL = "sqlite:///./data/inventory.db"
 
 # Create SQLAlchemy engine

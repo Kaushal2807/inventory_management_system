@@ -64,9 +64,12 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
     host = os.getenv("HOST", "0.0.0.0")
     
+    # Disable reload in production environments
+    reload_mode = not (os.getenv("RAILWAY_ENVIRONMENT") or os.getenv("DOCKER_ENVIRONMENT") or "/app" in os.getcwd())
+    
     uvicorn.run(
         "main:app",
         host=host,
         port=port,
-        reload=True if not os.getenv("RAILWAY_ENVIRONMENT") else False
+        reload=reload_mode
     )

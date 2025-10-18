@@ -125,7 +125,7 @@ const Dashboard = () => {
                 dashboardStats = statsResponse.data;
 
                 // Fetch category distribution data
-                const categoryResponse = await fetch('http://localhost:8000/dashboard/category-distribution');
+                const categoryResponse = await fetch('/api/dashboard/category-distribution');
                 const categories = await categoryResponse.json();
                 setCategoryData(categories);
             } catch (error) {

@@ -146,7 +146,7 @@ const PaymentHistory = () => {
         loadPayments();
 
         // Test network connectivity
-        fetch('http://localhost:8000/payments/')
+        fetch('/api/payments/')
             .then(response => response.json())
             .then(data => console.log('Direct fetch test:', data))
             .catch(error => console.error('Direct fetch error:', error));

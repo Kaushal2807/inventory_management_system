@@ -1,11 +1,23 @@
 import axios from 'axios';
 
-// For production (when served via Nginx), use relative URL
-// For development, use localhost
-const isDevelopment = import.meta.env.DEV;
-const API_BASE_URL = isDevelopment 
-    ? (import.meta.env.VITE_API_URL || 'http://localhost:8000')
-    : '/api';
+// Dynamic API URL configuration
+const getApiBaseUrl = () => {
+    // If in development mode
+    if (import.meta.env.DEV) {
+        return import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    }
+    
+    // For Vercel production deployment
+    if (import.meta.env.VITE_API_URL) {
+        return import.meta.env.VITE_API_URL;
+    }
+    
+    // For local Nginx deployment
+    // Use relative URL so it works with any hostname/IP
+    return '/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 const api = axios.create({
     baseURL: API_BASE_URL,

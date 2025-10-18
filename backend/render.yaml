@@ -1,0 +1,16 @@
+# Render Deployment Configuration
+# File: render.yaml (optional - can also configure via Render dashboard)
+
+services:
+  - type: web
+    name: inventory-management-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: HOST
+        value: "0.0.0.0"
+      - key: PORT
+        value: "8000"
+      - key: DOCKER_ENVIRONMENT
+        value: "true"
+    healthCheckPath: /health
