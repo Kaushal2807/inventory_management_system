@@ -47,6 +47,7 @@ export const categoriesAPI = {
 // Dashboard API
 export const dashboardAPI = {
     getStats: () => api.get('/dashboard/stats'),
+    getCategoryDistribution: () => api.get('/dashboard/category-distribution'),
 };
 
 // Stock Movements API

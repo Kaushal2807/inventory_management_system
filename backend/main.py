@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 
 from database import engine, Base, init_database
-from routes import categories, items, dashboard, stock_movements, payments, auth
+from routes import categories, items, dashboard, stock_movements, payments, auth, users
 
 # Import models to ensure they are registered with Base
 from models import Category, Item, StockMovement, Payment, PaymentItem, User
@@ -65,6 +65,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth.router)
+app.include_router(users.router)
 app.include_router(categories.router)
 app.include_router(items.router)
 app.include_router(dashboard.router)

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import { dashboardAPI, itemsAPI } from '../../services/api';
+import axios from 'axios';
+import { dashboardAPI, itemsAPI, categoriesAPI } from '../../services/api';
 
 const DashboardContainer = styled.div`
   padding: 24px;
@@ -125,13 +126,26 @@ const Dashboard = () => {
                 dashboardStats = statsResponse.data;
 
                 // Fetch category distribution data
-                const categoryResponse = await fetch('/api/dashboard/category-distribution');
-                const categories = await categoryResponse.json();
-                setCategoryData(categories);
+                try {
+                    const categoryResponse = await dashboardAPI.getCategoryDistribution();
+                    setCategoryData(categoryResponse.data);
+                } catch (catError) {
+                    console.log('Category distribution endpoint not available');
+                    setCategoryData([]);
+                }
             } catch (error) {
                 console.log('Dashboard stats endpoint not available, calculating from items...');
                 const itemsResponse = await itemsAPI.getAll();
                 const items = itemsResponse.data;
+
+                // Get categories count
+                let categoriesCount = 0;
+                try {
+                    const categoriesResponse = await categoriesAPI.getAll();
+                    categoriesCount = categoriesResponse.data.length;
+                } catch (catError) {
+                    console.log('Categories endpoint not available');
+                }
 
                 // Calculate stats manually
                 const totalValue = items.reduce((sum, item) => {
@@ -147,8 +161,8 @@ const Dashboard = () => {
                 dashboardStats = {
                     totalItems: items.length,
                     total_items: items.length,
-                    totalCategories: 0, // We'll need to fetch categories separately
-                    total_categories: 0,
+                    totalCategories: categoriesCount,
+                    total_categories: categoriesCount,
                     lowStockItems: lowStock.length,
                     low_stock_items: lowStock.length,
                     totalValue: totalValue,
