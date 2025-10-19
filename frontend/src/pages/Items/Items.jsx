@@ -588,7 +588,7 @@ const Items = () => {
                                     color: '#6c757d'
                                 }}
                             >
-                                Click outside or press × to close
+                                Click outside or press esc to close
                             </div>
                         </div>
                     </div>
