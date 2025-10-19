@@ -92,7 +92,7 @@ def upload_to_production(data):
         # Login to get token
         login_response = requests.post(
             f"{PRODUCTION_API_URL}/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123"},
             headers={"Content-Type": "application/json"}
         )
         
