@@ -23,10 +23,10 @@ def init_default_users():
     try:
         # Create default users if they don't exist
         default_users = [
-            {"username": "admin", "password": "admin123"},
-            {"username": "test", "password": "test123"},
-            {"username": "user", "password": "user123"},
-            {"username": "demo", "password": "demo123"}
+            {"username": "admin", "password": "123"},
+            {"username": "test", "password": "123"},
+            {"username": "user", "password": "123"},
+            {"username": "demo", "password": "123"}
         ]
         
         for user_data in default_users:
