@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import os
+from pathlib import Path
 
 from database import engine, Base, init_database
-from routes import categories, items, dashboard, stock_movements, payments, auth, users
+from routes import categories, items, dashboard, stock_movements, payments, auth, users, upload
 
 # Import models to ensure they are registered with Base
 from models import Category, Item, StockMovement, Payment, PaymentItem, User
@@ -71,6 +73,12 @@ app.include_router(items.router)
 app.include_router(dashboard.router)
 app.include_router(stock_movements.router)
 app.include_router(payments.router)
+app.include_router(upload.router)
+
+# Mount static files directory for serving uploaded images
+uploads_dir = Path("uploads")
+uploads_dir.mkdir(exist_ok=True)
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 @app.get("/")
 def root():

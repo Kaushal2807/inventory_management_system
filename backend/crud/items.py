@@ -21,7 +21,8 @@ def create_item(db: Session, item: ItemCreate):
         purchase_price=item.purchase_price,
         selling_price=item.selling_price,
         quantity=item.quantity,
-        min_stock_level=item.min_stock_level
+        min_stock_level=item.min_stock_level,
+        image_url=item.image_url
     )
     db.add(db_item)
     db.commit()
@@ -50,6 +51,7 @@ def update_item(db: Session, item_id: int, item: ItemUpdate):
     db_item.selling_price = item.selling_price
     db_item.quantity = item.quantity
     db_item.min_stock_level = item.min_stock_level
+    db_item.image_url = item.image_url
     db_item.updated_at = func.now()
     
     db.commit()

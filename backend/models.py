@@ -48,6 +48,7 @@ class Item(Base):
     selling_price = Column(Float, nullable=False)
     quantity = Column(Integer, nullable=False, default=0)
     min_stock_level = Column(Integer, nullable=True, default=10)
+    image_url = Column(String(500), nullable=True)  # Store image URL or path
     created_at = Column(DateTime(timezone=True), default=get_ist_now)
     updated_at = Column(DateTime(timezone=True), default=get_ist_now, onupdate=get_ist_now)
     

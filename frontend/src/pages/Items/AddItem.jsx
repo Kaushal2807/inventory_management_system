@@ -140,6 +140,9 @@ const AddItem = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageUploading, setImageUploading] = useState(false);
   const navigate = useNavigate();
 
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -160,9 +163,80 @@ const AddItem = () => {
     }
   };
 
+  const handleImageSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error('Please select a valid image file (JPG, PNG, GIF, WebP)');
+        return;
+      }
+
+      // Validate file size (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size should be less than 5MB');
+        return;
+      }
+
+      setImageFile(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async () => {
+    if (!imageFile) return null;
+
+    try {
+      setImageUploading(true);
+      const formData = new FormData();
+      formData.append('file', imageFile);
+
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://inventory-management-backend-xxs3.onrender.com';
+      const response = await fetch(`${API_BASE_URL}/upload/image`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
+      }
+
+      const result = await response.json();
+      return result.file_url;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+      return null;
+    } finally {
+      setImageUploading(false);
+    }
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
   const onSubmit = async (data) => {
     try {
       setLoading(true);
+
+      // Upload image first if selected
+      let imageUrl = null;
+      if (imageFile) {
+        imageUrl = await uploadImage();
+        if (!imageUrl) {
+          toast.error('Failed to upload image. Please try again.');
+          return;
+        }
+      }
 
       // Convert data to match backend format
       const itemData = {
@@ -172,7 +246,8 @@ const AddItem = () => {
         purchase_price: parseFloat(data.purchasePrice),
         selling_price: parseFloat(data.sellingPrice),
         quantity: parseInt(data.quantity),
-        min_stock_level: parseInt(data.minStockLevel) || 10
+        min_stock_level: parseInt(data.minStockLevel) || 10,
+        image_url: imageUrl
       };
 
       await itemsAPI.create(itemData);
@@ -218,6 +293,53 @@ const AddItem = () => {
             {...register('description')}
             placeholder="Enter item description"
           />
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Item Image</Label>
+          <div style={{ border: '2px dashed #ddd', borderRadius: '8px', padding: '20px', textAlign: 'center' }}>
+            {imagePreview ? (
+              <div>
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  style={{ maxWidth: '200px', maxHeight: '200px', marginBottom: '10px', borderRadius: '4px' }}
+                />
+                <div>
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: '#e74c3c',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Remove Image
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div style={{ fontSize: '48px', color: '#ccc', marginBottom: '10px' }}>📷</div>
+                <div style={{ marginBottom: '10px', color: '#666' }}>
+                  Click to upload item image or drag and drop
+                </div>
+                <div style={{ fontSize: '12px', color: '#999' }}>
+                  Supports: JPG, PNG, GIF, WebP (Max 5MB)
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  style={{ marginTop: '10px' }}
+                />
+              </div>
+            )}
+          </div>
         </FormGroup>
 
         <FormGroup>
@@ -282,8 +404,8 @@ const AddItem = () => {
           <Button type="button" className="secondary" onClick={() => navigate('/items')}>
             Cancel
           </Button>
-          <Button type="submit" className="primary" disabled={loading}>
-            {loading ? 'Adding...' : 'Add Item'}
+          <Button type="submit" className="primary" disabled={loading || imageUploading}>
+            {loading ? 'Adding...' : imageUploading ? 'Uploading Image...' : 'Add Item'}
           </Button>
         </FormActions>
       </Form>

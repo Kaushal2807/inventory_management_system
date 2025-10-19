@@ -58,6 +58,7 @@ class ItemBase(BaseModel):
     selling_price: float = Field(..., ge=0, description="Selling price")
     quantity: int = Field(..., ge=0, description="Current quantity")
     min_stock_level: Optional[int] = Field(10, ge=0, description="Minimum stock level")
+    image_url: Optional[str] = Field(None, max_length=500, description="Item image URL")
 
 class ItemCreate(ItemBase):
     pass

@@ -40,7 +40,8 @@ def export_local_data():
                 "purchase_price": float(item.purchase_price or 0),
                 "selling_price": float(item.selling_price or 0),
                 "quantity": item.quantity,
-                "min_stock_level": item.min_stock_level or 10
+                "min_stock_level": item.min_stock_level or 10,
+                "image_url": item.image_url
             })
         
         # Export Stock Movements
